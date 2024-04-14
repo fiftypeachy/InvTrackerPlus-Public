@@ -1,0 +1,30 @@
+{% load static %}
+<style>
+    body {
+        position: relative;
+        height: 100vh;
+        margin: 0;
+        padding: 0;
+    }
+
+    body::before {
+        content: "";
+        background-image: url({% static 'base/2.jpg' %});
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        opacity: 0.5;
+        z-index: -1;
+    }
+
+    .black-bg {
+        background-color: rgba(0, 0, 0, 0.5);
+        display: inline-block;
+        border-radius: 10px;
+    }
+</style>

@@ -1,0 +1,58 @@
+{% extends "main.html" %}
+
+{% block title %}
+Transaction History
+{% endblock %}
+
+{% block main %}
+{% load base_extras %}
+{% load tz %}
+
+<div class="d-flex justify-content-start mb-2">
+    <div class="me-2">
+        <input type="radio" class="btn-check" name="history" id="txn-btn" autocomplete="off" checked>
+        <label class="btn btn-outline-primary" for="txn-btn">Transaction History</label>
+    </div>
+    <input type="radio" class="btn-check" name="history" id="trf-btn" autocomplete="off">
+    <label class="btn btn-outline-primary" for="trf-btn">Transfer History</label>
+</div>
+
+{% include "base/transactions.html" %}
+
+<div class="px-2" id="trf" style="display: none">
+    <h1>Transfer History</h1>
+    <div class="table-responsive">
+        <table class="table table-striped text-nowrap table-hover">
+            <thead class="table-group-divider">
+                <tr>
+                    <th>#</th>
+                    <th>Transfer ID</th>
+                    <th>Type</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Value</th>
+                    <th>Old Balance</th>
+                    <th>New Balance</th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                {% for t in transfers %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ t.id }}</td>
+                    <td>{{ t.get_method_display }}</td>
+                    <td>{{ t.datetime.date }}</td>
+                    <td>{{ t.datetime.time }}</td>
+                    <td>{{ t.value|usd }}</td>
+                    <td>{{ t.old_cash|usd }}</td>
+                    <td>{{ t.new_cash|usd }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% include 'base/transactions_modal.html' %}
+
+{% endblock %}

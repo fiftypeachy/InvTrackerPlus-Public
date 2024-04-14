@@ -1,0 +1,50 @@
+{% load tz %}
+{% load base_extras %}
+<div class="px-2" id="txn">
+    <h2>Transaction History</h2>
+    <!-- <hr class="rounded"> -->
+    <div class="table-responsive">
+        <table class="table table-striped text-nowrap table-hover">
+            <thead class="table-group-divider">
+                <tr>
+                    <th>#</th>
+                    <th>Transaction ID</th>
+                    <th>Ticker</th>
+                    <th>Direction</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Value</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody class="table-group-divider">
+                {% for t in transactions %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ t.id }}</td>
+                    <td>{{ t.owned_stock.stock.ticker }}</td>
+                    <td>{{ t.get_direction_display }}</td>
+                    <td>{{ t.datetime|date:"l, d F Y" }}</td>
+                    <td>{{ t.datetime|time:"h:i A" }}</td>
+                    <td>{{ t.unit_price|usd }}</td>
+                    <td>{{ t.quantity }}</td>
+                    <td>{{ t.unit_price|mul:t.quantity|usd }}</td>
+                    <td><button type="button" class="delete-button" data-bs-toggle="modal" data-bs-target="#deleteModal" data-transaction-id="{{ t.id }}">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="9"> No transaction records. </td>
+                </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+</div>
+

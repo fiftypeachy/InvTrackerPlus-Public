@@ -1,0 +1,83 @@
+{% extends 'main.html' %}
+
+{% block title %}
+Home
+{% endblock title %}
+
+{% block main %}
+{% load base_extras %}
+
+<div class="mx-3">
+  <div class="row justify-content-start mb-3">
+    <div class="col-8 text-start">
+      <h3>Net Account Value: {{ total|home_currency:request.user.hc|default:"Error" }} | {{ total|usd|default:"Error" }}</h3>
+    </div>
+    <div class="col-4 text-end">
+      <h3>Cash: {{ request.user.cash|usd }}</h3>
+    </div>
+  </div>
+  <div class="row justify-content-start mb-3">
+    <div class="col-6 text-start">
+      <h3>Total Unrealised P&ampL: {{ tup|home_currency:request.user.hc|default:"Error" }} | {{ tup|usd|default:"Error" }}</h3>
+    </div>
+    <div class="col-6 text-end">
+      <h3>Total Realised P&ampL: {{ trp|home_currency:request.user.hc|default:"Error"}} | {{ trp|usd|default:"Error" }}
+      </h3>
+    </div>
+  </div>
+
+  {% if holdings %}
+  <div class="accordion" id="portfolio">
+    <div class="accordion-item">
+      <div class="accordion-header">
+        <button class="accordion-button collapsed text-center" id="fakebtn" type="button" data-bs-toggle="collapse">
+          <div class="col-1"><strong class="custom-header">Ticker</strong></div>
+          <div class="col-1"><strong class="custom-header">Market Price</strong></div>
+          <div class="col-1"><strong class="custom-header">Quantity</strong></div>
+          <div class="col-2"><strong class="custom-header">Average Cost Price</strong></div>
+          <div class="col-1"><strong class="custom-header">Total Value</strong></div>
+          <div class="col-1"><strong class="custom-header">Unrealised P&ampL</strong></div>
+          <div class="col-1"><strong class="custom-header">Realised P&ampL</strong></div>
+          <div class="col-1"><strong class="custom-header">Today&#x27s Change</strong></div>
+          <div class="col-1"><strong class="custom-header">Past Week&#x27s Change</strong></div>
+          <div class="col-1"><strong class="custom-header">All-Time P&ampL</strong></div>
+
+        </button>
+      </div>
+    </div>
+
+    {% for ownedStock in holdings %}
+    <div class="accordion-item">
+      <div class="accordion-header">
+        <button class="accordion-button collapsed text-center" type="button" data-bs-toggle="collapse"
+          data-bs-target="#row{{ forloop.counter }}">
+          {% with cp=ownedStock.stock.price ap=ownedStock.average_cost_price cqty=ownedStock.current_quantity %}
+            <div class="col-1">{{ ownedStock.stock.ticker }}</div>
+            <div class="col-1">{{ cp|usd }}</div>
+            <div class="col-1 stkqty">{{ cqty }}</div>
+            <div class="col-2">{{ ap|usd }}</div>
+            <div class="col-1">{{ cp|mul:cqty|usd }}</div>
+            <div class="col-1">{{ cp|minus:ap|mul:cqty|usd }}</div>
+            <div class="col-1">{{ ownedStock.realised_pnl|usd }}</div>
+            <div class="col-1"></div>
+            <div class="col-1"></div>
+            <div class="col-1">{{ cp|minus:ap|mul:cqty|add_dec:ownedStock.realised_pnl|usd }}</div>
+          {% endwith %}
+        </button>
+      </div>
+      <div id="row{{ forloop.counter }}" class="accordion-collapse collapse">
+        <div class="accordion-body share-info" data-ticker="{{ ownedStock.stock.ticker }}">
+          <div class="row align-items-center justify-content-start m-0">
+            {% include 'base/transactions.html' with transactions=ownedStock.transaction_set.all %}
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <h3>Nothing to show here. Try <a href="{% url 'base:search' %}">adding stocks here!</a></h3>
+  {% endif %}
+</div>
+{% include 'base/transactions_modal.html' %}
+{% endblock main %}

@@ -1,0 +1,24 @@
+{% extends 'main.html' %}
+
+{% block title %}
+User Profile Settings
+{% endblock title %}
+
+{% block main %}
+<div class="row justify-content-center mb-2">
+    <div class="col-auto transact">
+        <form method="post">
+            {% csrf_token %}
+            {{ form }}
+
+            <button class="btn btn-primary" type="submit">Update Settings!</button>
+
+        </form>
+    </div>
+
+</div>
+
+
+Change Password <a href="{% url 'base:change-pw' %}">here</a>&#33;
+
+{% endblock main %}

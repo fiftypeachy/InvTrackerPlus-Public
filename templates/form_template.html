@@ -1,0 +1,13 @@
+{% for field in form %}
+<div class="row justify-content-center align-items-center mb-3">
+    <div class="col-auto">
+        {{ field.errors }}
+    </div>
+    <div class="col-auto">
+        {{ field.label_tag }}
+    </div>
+    <div class="col-auto">
+        {{ field }}
+    </div>
+</div>
+{% endfor %}

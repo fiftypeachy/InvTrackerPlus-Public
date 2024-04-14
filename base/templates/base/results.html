@@ -1,0 +1,142 @@
+{% extends 'main.html' %}
+
+{% block title %}
+{{ stock.ticker }}
+{% endblock title %}
+
+{% block main %}
+{% load base_extras %}
+{% load tz %}
+
+
+<div>
+    <div class="row justify-content-center mb-3">
+        <div class="col-2">
+          <h4>Stock ticker: {{ stock.ticker }}</h3>
+        </div>
+        <div class="col-3">
+          <h4>Stock price: {{ stock.price|usd }}</h3>
+        </div>
+        <div class="col-3">
+            <h3>Quantity Owned: {{ ownedstock.current_quantity|default:"0.00" }}</h3>
+        </div>
+        <div class="col-4">
+            <h3>Average Cost of Owned: {{ ownedstock.average_cost_price|default:"US$0.00"}}</h3>
+        </div>
+      </div>
+    
+    {% include "base/transactions.html" %}
+    
+    
+</div>
+
+<div class="row justify-content-center mb-2">
+    <div class="col-auto transact">
+        <form action="{% url 'base:transact' stock.id %}" method="post">
+            {% csrf_token %}
+            {{ form }}
+
+            <button class="btn btn-primary" type="submit">Add Transaction!</button>
+
+        </form>
+    </div>
+
+</div>
+
+
+
+
+{% comment %}
+<div class="mb-3">
+    <input type="radio" class="btn-check" name="options-outlined" id="success-outlined" autocomplete="off" checked>
+    <label class="btn btn-outline-success" for="success-outlined">Buy</label>
+
+    <input type="radio" class="btn-check" name="options-outlined" id="danger-outlined" autocomplete="off">
+    <label class="btn btn-outline-danger" for="danger-outlined">Sell</label>
+</div>
+<div class="mb-3">
+    <label for="qty" class="form-label">Quantity</label>
+    <input autocomplete="off" autocapitalize="letters" autofocus class="form-control" name="qty" id="qty" type="number"
+        step="0.01" required>
+</div>
+<div class="mb-3">
+    <label for="dotxn" class="form-label">Date</label>
+    <input autocomplete="off" class="form-control" type="date" name="dotxn" id="dotxn" required>
+</div>
+<div class="mb-3">
+    <label for="totxn" class="form-label">Time</label>
+    <input autocomplete="off" class="form-control" type="time" name="totxn" id="totxn" required>
+</div>
+<div class="mb-3">
+    <label for="txnprice" class="form-label">Price</label>
+    <input autocomplete="off" class="form-control" type="number" step="0.01" min="0" name="txnprice" required>
+</div>
+
+
+
+<div class="col-auto sell d-none d-print-block">
+    <form action="{% url 'base:sell' stock.id %}" method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="sellqty" class="form-label">Quantity</label>
+            <input autocomplete="off" autocapitalize="letters" autofocus class="form-control" name="sellqty"
+                id="sellqty" type="number" step="0.01" required>
+        </div>
+        <div class="mb-3">
+            <label for="dostxn" class="form-label">Date</label>
+            <input autocomplete="off" class="form-control" type="date" name="dotxn" id="dotxn" required>
+        </div>
+        <div class="mb-3">
+            <label for="totxn" class="form-label">Time</label>
+            <input autocomplete="off" class="form-control" type="time" name="totxn" id="totxn" required>
+        </div>
+        <div class="mb-3">
+            <label for="txnprice" class="form-label">Price</label>
+            <input autocomplete="off" class="form-control" type="number" step="0.01" min="0" name="txnprice" required>
+        </div>
+
+
+
+
+        <button class="btn btn-danger" type="submit">Sell!</button>
+
+    </form>
+</div>
+
+<div class="col">
+    <form action="{% url 'base:buy' stock.id %}" method="post">
+        {% csrf_token %}
+        <div class="row justify-content-center mb-2">
+            <div class="form-floating fw-207">
+                <input autocomplete="off" autofocus class="form-control" id="buyqty" name="buyqty"
+                    placeholder="Quantity" type="number" step="0.01" required>
+                <label class="" for="buyqty">Quantity</label>
+            </div>
+        </div>
+
+        <button class="btn btn-primary" type="submit">Buy!</button>
+    </form>
+</div>
+<div class="col">
+    <form action="{% url 'base:sell' stock.id %}" method="post">
+        {% csrf_token %}
+        <div class="row justify-content-center">
+            <div class="form-floating mb-3 fw-207">
+                <input autocomplete="off" autofocus class="form-control" id="sellqty" name="sellqty"
+                    placeholder="Quantity" type="number" min="0.01" step="0.01" required>
+                <label for="sellqty">Quantity</label>
+            </div>
+        </div>
+
+        <button class="btn btn-danger" type="submit">Sell!</button>
+    </form>
+</div>
+{% endcomment %}
+
+
+
+
+
+{% include 'base/transactions_modal.html' %}
+
+{% endblock main %}

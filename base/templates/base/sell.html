@@ -1,0 +1,47 @@
+{% extends 'main.html' %}
+
+{% block title %}
+
+{{ stock.ticker }}
+
+{% endblock title %}
+
+{% block main %}
+
+<div class="container">
+  Stock ticker: {{ stock.ticker }}
+  Stock price: {{ stock.price }}
+  Stock history: {{ stock.stock_history }}
+  Quantity Owned: {{ quantity_owned }}
+
+  <div class="col-6">
+    <form action="{% url 'base:sell' stock.id %}" method="post">
+      {% csrf_token %}
+      <div class="row justify-content-center">
+        <div class="form-floating mb-3 fw-207">
+          <select autofocus class="form-select" id="sellss" name="symbol">
+            {% if options %}
+            <option disabled selected>Select a Ticker</option>
+            {% for option in options %}
+            <option value="{{ option }}">{{ option }}</option>
+            {% endfor %} {% else %}
+            <option disabled selected>You do not own any stocks</option>
+            {% endif %}
+          </select>
+          <label for="sellss">Ticker</label>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="form-floating mb-3 fw-207">
+          <input autocomplete="off" autofocus class="form-control" id="sellqty" name="sellqty" placeholder="Quantity"
+            type="number" min="0.01" step="0.01" required />
+          <label for="sellqty">Quantity</label>
+        </div>
+      </div>
+
+      <button class="btn btn-danger" type="submit">Sell!</button>
+    </form>
+  </div>
+</div>
+
+{% endblock main %}

@@ -1,0 +1,25 @@
+{% extends 'main.html' %}
+
+{% block title %}
+Search
+{% endblock title %}
+
+{% block main %}
+<form action="{% url 'base:search' %}" method="get">
+    <fieldset>
+        <legend>
+            <h1>Input a Ticker</h1>
+        </legend>
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                <input class="form-control" placeholder="Ticker" name="ticker" id="tickersearch">
+            </div>
+            <div class="col-auto"><input type="submit" value="Search" class="btn btn-primary"></div>
+    </fieldset>
+    
+    </div>
+
+    </div>
+
+</form>
+{% endblock main %}
